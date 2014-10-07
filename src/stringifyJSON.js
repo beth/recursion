@@ -3,34 +3,64 @@
 
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
-	var str = "{";
-	var first = true;
-	for(var k in obj)
+	
+	var insideObj = false;
+	
+	
+
+	if(typeof obj == "object" && !(obj === null) && !(Array.isArray(obj)))
 	{
-		if(!first)
+		insideObj = true;
+		var str = "{";
+		var first = true;
+		for(var k in obj)
 		{
-			str = str + ','; 
+			if (!(typeof k == "symbol" || typeof obj[k] == "function" || typeof obj[k] == "undefined" || typeof k == "undefined"))
+			{
+			
+				if(!first)
+				{
+					str = str + ','; 
+				}
+				else
+				{
+					first = false;
+				}
+				str = str + '\"' + k + '\"' + ':' + stringifyJSON(obj[k]);
+			}
+
 		}
-		else
+		return str + "}";
+	}
+	else if (Array.isArray(obj))
+	{
+		insideObj = true;
+		var str = "[";
+		var first = true;
+		for(var k in obj)
 		{
-			first = false;
-		}
-		
-		str = str + '\"' + k + '\"' + ':' ;
-		
-		if(typeof obj[k] == "object")
-		{
+			if(!first)
+			{
+				str = str + ',';
+			}
+			else
+			{
+				first = false;
+			}
 			str = str + stringifyJSON(obj[k]);
 		}
-		else if(typeof obj[k] == "string")
-		{
-			str = str + '\"' + obj[k] + '\"';
-		}
-		else
-		{
-			str = str + obj[k];
-		}
+		return str + "]";
 	}
-	console.log(str);
-  return str + "}";
+	else if (typeof obj == "string")
+	{
+		return '\"' + obj + '\"';
+	}
+	else if(insideObj)
+	{
+		return obj;
+	}
+	else
+		return "" + obj;
+
+
 };
