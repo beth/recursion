@@ -3,10 +3,18 @@
 
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
+
+	var primitiveCheck = function(ob) 
+	{
+		if(ob instanceof String || ob instanceof Number || ob instanceof Boolean)
+			return ob.valueOf();
+		else
+			return ob;
+	};
+	
+	obj = primitiveCheck(obj);
 	
 	var insideObj = false;
-	
-	
 
 	if(typeof obj == "object" && !(obj === null) && !(Array.isArray(obj)))
 	{
@@ -17,7 +25,6 @@ var stringifyJSON = function(obj) {
 		{
 			if (!(typeof k == "symbol" || typeof obj[k] == "function" || typeof obj[k] == "undefined" || typeof k == "undefined"))
 			{
-			
 				if(!first)
 				{
 					str = str + ','; 
